@@ -1,9 +1,48 @@
 (function() {
   "use strict";
 
+// window.addEventListener("DOMContentLoaded", function(){
+//      stripe.redirectToCheckout({
+//     items: [
+//       // Replace with the ID of your SKU
+//       {sku: 'sku_FLGxNOPgUxJbrq', quantity: 1}
+//     ],
+//     successUrl: 'https://ayanified.com/success',
+//     cancelUrl: 'https://ayanified.com/cancel',
+//   }).then(function (result) {
+//     // If `redirectToCheckout` fails due to a browser or network
+//     // error, display the localized error message to your customer
+//     // using `result.error.message`.
+//   });
+// });
 
-var stripe = Stripe('pk_test_9kshBgRL4aVLLRHWTPYYSJB600jXXNTeOQ');
+  var stripe = Stripe('pk_test_9kshBgRL4aVLLRHWTPYYSJB600jXXNTeOQ');
 
+ var checkoutButton = document.getElementById('checkout-button-sku_FLxzSc6zq6Egdk');
+  checkoutButton.addEventListener('click', function () {
+    // When the customer clicks on the button, redirect
+    // them to Checkout.
+    console.log('gets here')
+    stripe.redirectToCheckout({
+      items: [{sku: 'sku_FLxzSc6zq6Egdk', quantity: 1}],
+
+      // Do not rely on the redirect to the successUrl for fulfilling
+      // purchases, customers may not always reach the success_url after
+      // a successful payment.
+      // Instead use one of the strategies described in
+      // https://stripe.com/docs/payments/checkout/fulfillment
+      successUrl: window.location.protocol + '//ayanified.com/success',
+      cancelUrl: window.location.protocol + '//ayanified.com/canceled',
+    })
+    .then(function (result) {
+      if (result.error) {
+        // If `redirectToCheckout` fails due to a browser or network
+        // error, display the localized error message to your customer.
+        var displayError = document.getElementById('error-message');
+        displayError.textContent = result.error.message;
+      }
+    });
+  });
 
 function stripeTokenHandler(token) {
   // Insert the token ID into the form so it gets submitted to the server
@@ -31,11 +70,11 @@ function createToken() {
 };
 
 // Create a token when the form is submitted.
-var form = document.getElementById('payment-form');
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
-  createToken();
-});
+// var form = document.getElementById('payment-form');
+// form.addEventListener('submit', function(e) {
+//   e.preventDefault();
+//   createToken();
+// });
 
 // var form = document.getElementById('payment-form');
 // form.addEventListener('submit', function(event) {
@@ -53,18 +92,7 @@ form.addEventListener('submit', function(e) {
 //     }
 //   });
 // });
-// stripe.redirectToCheckout({
-//   items: [
-//     // Replace with the ID of your SKU
-//     {sku: 'sku_FLGxNOPgUxJbrq', quantity: 1}
-//   ],
-//   successUrl: 'https://ayanified.com/success',
-//   cancelUrl: 'https://ayanified.com/cancel',
-// }).then(function (result) {
-//   // If `redirectToCheckout` fails due to a browser or network
-//   // error, display the localized error message to your customer
-//   // using `result.error.message`.
-// });
+
 
 
 
@@ -102,7 +130,7 @@ form.addEventListener('submit', function(e) {
       }
     }
   });
-  card.mount("#example5-card");
+  // card.mount("#example5-card");
   card.addEventListener('change', function(event) {
   var displayError = document.getElementById('error-message');
   if (event.error) {
@@ -160,5 +188,5 @@ form.addEventListener('submit', function(e) {
     }
   });
 
-  registerElements([card], "example5");
+  // registerElements([card], "example5");
 })();
